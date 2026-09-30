@@ -25,9 +25,9 @@ app.use((req, res, next) => {
 });
 
 // ── CORS ───────────────────────────────────────────────────────
+
 const allowedOrigins = [
     'https://ecommerce-zexort4.vercel.app',
-    'https://ecommerce-qzyqr7xkw-zexort4.vercel.app',
 
     // Local development
     'http://localhost:3000',
@@ -39,13 +39,21 @@ const allowedOrigins = [
 app.use(
     cors({
         origin: function (origin, callback) {
-            // Allow requests without Origin
-            // (Postman, curl, server-to-server, etc.)
+            // Requests without Origin (curl, Postman, etc.)
             if (!origin) {
                 return callback(null, true);
             }
 
+            // Exact allowed origins
             if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+
+            // Allow Vercel deployment URLs of this project
+            const isVercelDeployment =
+                /^https:\/\/ecommerce-[a-z0-9-]+-zexort4\.vercel\.app$/.test(origin);
+
+            if (isVercelDeployment) {
                 return callback(null, true);
             }
 
