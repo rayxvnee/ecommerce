@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://ecommerce-rrgp.onrender.com/api'; const API = axios.create({
+const API_BASE_URL = 'https://ecommerce-rrgp.onrender.com/api';
+const API = axios.create({
   baseURL: API_BASE_URL,
 });
 
