@@ -1,3 +1,4 @@
+
 const dns = require('dns');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
@@ -25,47 +26,10 @@ app.use((req, res, next) => {
 });
 
 // ── CORS ───────────────────────────────────────────────────────
-
-const allowedOrigins = [
-    'https://ecommerce-zexort4.vercel.app',
-
-    // Local development
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001',
-];
-
 app.use(
     cors({
-        origin: function (origin, callback) {
-            // Requests without Origin (curl, Postman, etc.)
-            if (!origin) {
-                return callback(null, true);
-            }
-
-            // Exact allowed origins
-            if (allowedOrigins.includes(origin)) {
-                return callback(null, true);
-            }
-
-            // Allow Vercel deployment URLs of this project
-            const isVercelDeployment =
-                /^https:\/\/ecommerce-[a-z0-9-]+-zexort4\.vercel\.app$/.test(origin);
-
-            if (isVercelDeployment) {
-                return callback(null, true);
-            }
-
-            console.log(`❌ CORS blocked: ${origin}`);
-
-            return callback(
-                new Error(`CORS blocked for origin: ${origin}`)
-            );
-        },
-
+        origin: true,
         credentials: true,
-
         methods: [
             'GET',
             'POST',
@@ -74,7 +38,6 @@ app.use(
             'DELETE',
             'OPTIONS',
         ],
-
         allowedHeaders: [
             'Content-Type',
             'Authorization',
@@ -87,7 +50,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ── Logger ─────────────────────────────────────────────────────
-// Development only
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
@@ -99,7 +61,10 @@ mongoose
         console.log('✅ MongoDB connected');
     })
     .catch((err) => {
-        console.error('❌ MongoDB connection error:', err.message);
+        console.error(
+            '❌ MongoDB connection error:',
+            err.message
+        );
         process.exit(1);
     });
 
@@ -132,7 +97,9 @@ const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
     console.log(
-        `🚀 Server running in ${process.env.NODE_ENV || 'development'
+        `🚀 Server running in ${
+            process.env.NODE_ENV || 'development'
         } mode on port ${PORT}`
     );
 });
+
