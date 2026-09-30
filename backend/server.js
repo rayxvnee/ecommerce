@@ -25,9 +25,11 @@ app.use((req, res, next) => {
 });
 
 // ── CORS ───────────────────────────────────────────────────────
-// Frontend Vercel + local development
 const allowedOrigins = [
     'https://ecommerce-zexort4.vercel.app',
+    'https://ecommerce-qzyqr7xkw-zexort4.vercel.app',
+
+    // Local development
     'http://localhost:3000',
     'http://localhost:3001',
     'http://127.0.0.1:3000',
@@ -38,7 +40,7 @@ app.use(
     cors({
         origin: function (origin, callback) {
             // Allow requests without Origin
-            // (curl, Postman, server-to-server, etc.)
+            // (Postman, curl, server-to-server, etc.)
             if (!origin) {
                 return callback(null, true);
             }
@@ -53,9 +55,22 @@ app.use(
                 new Error(`CORS blocked for origin: ${origin}`)
             );
         },
+
         credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+
+        methods: [
+            'GET',
+            'POST',
+            'PUT',
+            'PATCH',
+            'DELETE',
+            'OPTIONS',
+        ],
+
+        allowedHeaders: [
+            'Content-Type',
+            'Authorization',
+        ],
     })
 );
 
