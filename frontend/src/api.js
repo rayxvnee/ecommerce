@@ -1,49 +1,94 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://ecommerce-rrgp.onrender.com/api';
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  'http://localhost:5001/api';
+
 const API = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Attach JWT token to every request if available
+// Attach JWT token
 API.interceptors.request.use((config) => {
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-  if (user?.token) {
-    config.headers.Authorization = `Bearer ${user.token}`;
+  try {
+    const user = JSON.parse(
+      localStorage.getItem('user') || 'null'
+    );
+
+    if (user?.token) {
+      config.headers.Authorization = `Bearer ${user.token}`;
+    }
+  } catch (error) {
+    console.error('Error reading user:', error);
   }
+
   return config;
 });
 
-// ── Auth ────────────────────────────────
-export const registerUser = (data) => API.post('/auth/register', data);
-export const loginUser = (data) => API.post('/auth/login', data);
-export const getMe = () => API.get('/auth/me');
+export const registerUser = (data) =>
+  API.post('/auth/register', data);
 
-// ── Products ────────────────────────────
-export const getProducts = (params) => API.get('/products', { params });
-export const getFeaturedProducts = () => API.get('/products/featured');
-export const getProduct = (id) => API.get(`/products/${id}`);
-export const getRecommendedProducts = (id) => API.get(`/products/${id}/recommendations`);
-export const createProduct = (data) => API.post('/products', data);
-export const updateProduct = (id, data) => API.put(`/products/${id}`, data);
-export const deleteProduct = (id) => API.delete(`/products/${id}`);
-export const addReview = (id, data) => API.post(`/products/${id}/reviews`, data);
+export const loginUser = (data) =>
+  API.post('/auth/login', data);
 
-// ── Shops ───────────────────────────────
-export const getShops = (params) => API.get('/shops', { params });
-export const getShop = (id) => API.get(`/shops/${id}`);
-export const createShop = (data) => API.post('/shops', data);
-export const updateShop = (id, data) => API.put(`/shops/${id}`, data);
-export const deleteShop = (id) => API.delete(`/shops/${id}`);
+export const getMe = () =>
+  API.get('/auth/me');
 
-// ── Orders ──────────────────────────────
-export const createOrder = (data) => API.post('/orders', data);
-export const getMyOrders = () => API.get('/orders/mine');
-export const getOrder = (id) => API.get(`/orders/${id}`);
-export const getAllOrders = (params) => API.get('/orders', { params });
-export const updateOrderStatus = (id, status) => API.put(`/orders/${id}/status`, { status });
+export const getProducts = (params) =>
+  API.get('/products', { params });
 
-// ── Marketing ──────────────────────────
-export const subscribeNewsletter = (data) => API.post('/marketing/subscribe', data);
+export const getFeaturedProducts = () =>
+  API.get('/products/featured');
+
+export const getProduct = (id) =>
+  API.get(`/products/${id}`);
+
+export const getRecommendedProducts = (id) =>
+  API.get(`/products/${id}/recommendations`);
+
+export const createProduct = (data) =>
+  API.post('/products', data);
+
+export const updateProduct = (id, data) =>
+  API.put(`/products/${id}`, data);
+
+export const deleteProduct = (id) =>
+  API.delete(`/products/${id}`);
+
+export const addReview = (id, data) =>
+  API.post(`/products/${id}/reviews`, data);
+
+export const getShops = (params) =>
+  API.get('/shops', { params });
+
+export const getShop = (id) =>
+  API.get(`/shops/${id}`);
+
+export const createShop = (data) =>
+  API.post('/shops', data);
+
+export const updateShop = (id, data) =>
+  API.put(`/shops/${id}`, data);
+
+export const deleteShop = (id) =>
+  API.delete(`/shops/${id}`);
+
+export const createOrder = (data) =>
+  API.post('/orders', data);
+
+export const getMyOrders = () =>
+  API.get('/orders/mine');
+
+export const getOrder = (id) =>
+  API.get(`/orders/${id}`);
+
+export const getAllOrders = (params) =>
+  API.get('/orders', { params });
+
+export const updateOrderStatus = (id, status) =>
+  API.put(`/orders/${id}/status`, { status });
+
+export const subscribeNewsletter = (data) =>
+  API.post('/marketing/subscribe', data);
 
 export default API;
